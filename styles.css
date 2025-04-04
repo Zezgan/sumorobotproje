@@ -12,9 +12,15 @@ h2{
     font-weight: normal;
     color: #4070a2;
 }
-
+h3{
+   margin-left: 10%;
+   color: #4070a2;  
+}
 body{
     background-color: rgba(223, 223, 217, 0.815);
+}
+label{
+   margin-left: 10%;
 }
 
 .button {
