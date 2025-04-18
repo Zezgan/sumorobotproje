@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    
+    <!-- Harici CSS dosyan -->
+    <link rel="stylesheet" href="styles.css" />
+    
+    <title>Konfigürasyon Ayarları</title>
+  </head>
+  <body class="bg-light">
+    <div class="container mt-5">
+      <div class="card shadow rounded-4">
+        <div class="card-header bg-primary text-white text-center">
+          <h4>Konfigürasyon Ayarları</h4>
+        </div>
+        <div class="card-body">
+          <form>
+            {% for field in fields %}
+            <div class="mb-3">
+              <label class="form-label fw-semibold">{{ field.label }}:</label>
+
+              {% if field.type == 'select' %}
+              <select name="{{ field.name }}" class="form-select">
+                <option value="">Seçim yapınız</option>
+                {% for opt_label, opt_value in field.options.items() %}
+                <option value="{{ opt_value }}">{{ opt_label }}</option>
+                {% endfor %}
+              </select>
+              {% else %}
+              <input type="{{ field.type }}" name="{{ field.name }}" class="form-control" />
+              {% endif %}
+            </div>
+            {% endfor %}
+
+            <div class="text-center">
+              <button type="button" onclick="save()" class="btn btn-success px-4">
+                Kaydet
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS (Opsiyonel) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Formu JSON olarak POST eden JavaScript -->
+    <script>
+      function save() {
+        const form = document.querySelector("form");
+        const formData = new FormData(form);
+        const data = {};
+
+        for (const [key, value] of formData.entries()) {
+          data[key] = value;
+        }
+
+        fetch("/save_config", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        })
+          .then((res) => res.json())
+          .then((res) => console.log("Yanıt:", res))
+          .catch((err) => console.error("Hata:", err));
+      }
+    </script>
+  </body>
+</html>
